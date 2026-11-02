@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { History, Play, Trash2, CheckCircle2, RotateCcw, X } from 'lucide-react';
 import type { MediaItem, DownloadItem } from '../../types';
 import type { WatchHistoryEntry } from '../../services/watchHistory';
+import { RemoteImage } from '../RemoteImage';
 
 interface Props {
   entries: WatchHistoryEntry[];
@@ -30,7 +31,7 @@ export const WatchHistoryScreen: React.FC<Props> = ({ entries, onPlay, onRemove,
     {ongoing.length > 0 && <div className="bg-[#1d272b] rounded-2xl border border-[#00f0ff]/20 p-3">
       <p className="text-sm font-bold text-[#00f0ff] mb-3">▶ İzlemeye Devam Et</p>
       <div className="flex gap-3 overflow-x-auto">{ongoing.slice(0, 12).map(e => <button key={e.id} onClick={() => onPlay(e.media)} className="shrink-0 w-32 text-left">
-        <img src={e.media.poster} alt="" className="w-full h-20 object-cover rounded-lg bg-[#333]" />
+        <RemoteImage src={e.media.poster} alt="" className="w-full h-20 object-cover rounded-lg bg-[#333]" />
         <span className="text-xs font-semibold line-clamp-2 mt-1">{e.media.title}</span>
         <span className="text-[10px] text-[#b9cacb]">{time(e.positionSeconds)}</span>
         <div className="h-1 bg-white/15 rounded mt-1"><div className="h-full rounded bg-[#00f0ff]" style={{width: Math.min(100, 100*e.positionSeconds/e.durationSeconds)+'%'}} /></div>
@@ -42,7 +43,7 @@ export const WatchHistoryScreen: React.FC<Props> = ({ entries, onPlay, onRemove,
     {visible.length ? <div className="space-y-3">{visible.map(e => {
       const percent=e.durationSeconds>0 ? Math.min(100,Math.round(100*e.positionSeconds/e.durationSeconds)):0;
       return <article key={e.id} className="rounded-2xl bg-[#202022] border border-white/5 p-3 flex gap-3">
-        <img src={e.media.poster} alt="" className="w-24 h-24 shrink-0 rounded-lg object-cover bg-[#333]" />
+        <RemoteImage src={e.media.poster} alt="" className="w-24 h-24 shrink-0 rounded-lg object-cover bg-[#333]" />
         <div className="min-w-0 flex-1 space-y-1">
           <h3 className="font-bold text-sm break-words line-clamp-2">{e.media.title}</h3>
           <p className="text-[11px] text-[#b9cacb]">{new Date(e.watchedAt).toLocaleString('tr-TR')} · {e.media.type==='live'?'Canlı TV':e.media.type==='movie'?'Film':'Dizi'}</p>

@@ -1,3 +1,4 @@
+import { RemoteImage } from '../RemoteImage';
 import React, { useState, useEffect } from 'react';
 import { MediaItem, Playlist, SeriesDetail, SeriesEpisode } from '../../types';
 import { FollowButton } from './FollowingShelf';
@@ -110,13 +111,11 @@ export const SeriesDetailModal: React.FC<SeriesDetailModalProps> = ({
         {/* Banner with Poster and Meta */}
         <div className="relative h-48 sm:h-60 landscape:h-auto landscape:w-[36%] landscape:min-w-[250px] landscape:max-w-[380px] w-full overflow-hidden shrink-0 bg-[#1c1b1d]">
           {/* Backdrop Image */}
-          <img
-            src={seriesDetail?.backdrop || seriesDetail?.cover || seriesItem.poster}
+          <RemoteImage
+            src={seriesDetail?.backdrop || seriesDetail?.cover || seriesItem.backdrop || seriesItem.poster}
+            fallbacks={[seriesDetail?.cover, seriesItem.poster]}
             alt={seriesItem.title}
             className="w-full h-full object-cover opacity-35 blur-xs scale-105"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = seriesItem.poster;
-            }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#131315] via-[#131315]/70 to-transparent"></div>
 
@@ -133,14 +132,11 @@ export const SeriesDetailModal: React.FC<SeriesDetailModalProps> = ({
           <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 right-3 sm:right-4 flex gap-3 sm:gap-4 items-end z-10">
             {/* Poster Card */}
             <div className="w-16 sm:w-24 landscape:w-20 aspect-[2/3] rounded-xl sm:rounded-2xl overflow-hidden shrink-0 shadow-2xl border border-white/15 bg-[#201f21]">
-              <img
+              <RemoteImage
                 src={seriesDetail?.cover || seriesItem.poster}
+                fallbacks={[seriesItem.poster, seriesDetail?.backdrop]}
                 alt={seriesItem.title}
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src =
-                    'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=400&auto=format&fit=crop&q=80';
-                }}
               />
             </div>
 
@@ -297,13 +293,11 @@ export const SeriesDetailModal: React.FC<SeriesDetailModalProps> = ({
                         <div className="flex items-start gap-3 min-w-0 flex-1">
                           {/* Episode thumbnail */}
                           <div className="relative w-20 h-14 rounded-xl bg-[#2a2a2c] overflow-hidden shrink-0 border border-white/5">
-                            <img
+                            <RemoteImage
                               src={episode.image || seriesDetail?.cover || seriesItem.poster}
+                              fallbacks={[seriesDetail?.cover, seriesItem.poster, seriesDetail?.backdrop]}
                               alt={episode.title}
                               className="w-full h-full object-cover"
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).src = seriesItem.poster;
-                              }}
                             />
                             <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                               <Play className="w-5 h-5 text-[#00f0ff] fill-[#00f0ff]" />

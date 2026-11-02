@@ -1,3 +1,4 @@
+import { RemoteImage } from '../RemoteImage';
 import React, { useEffect, useRef, useState } from 'react';
 import { DownloadItem, SystemStats } from '../../types';
 import type { ScheduledDownload } from '../../services/downloadSchedule';
@@ -173,7 +174,7 @@ export const DownloadsScreen: React.FC<DownloadsScreenProps> = ({
                   <button onClick={() => onDeleteItem(item.id)} className="absolute top-2 right-2 z-10 w-7 h-7 rounded-full bg-black/60 hover:bg-[#93000a] text-white flex items-center justify-center border border-white/10" title="İndirilen dosyayı sil" aria-label="İndirilen dosyayı sil"><X className="w-4 h-4" /></button>
                   <div className="flex gap-3 items-start pl-1 pr-7">
                     <div className="relative w-16 h-16 rounded-xl bg-[#2a2a2c] overflow-hidden shrink-0 shadow border border-white/5 cursor-pointer" onClick={() => onOpenCatalog(item)} title="Katalogdaki konumunu aç">
-                      <img
+                      <RemoteImage
                         className="w-full h-full object-cover"
                         alt={item.title}
                         src={item.poster}
@@ -246,7 +247,7 @@ export const DownloadsScreen: React.FC<DownloadsScreenProps> = ({
                 >
                   <div className="flex gap-3 items-center">
                     <div className="relative w-14 h-20 rounded-xl bg-[#2a2a2c] overflow-hidden shrink-0 shadow border border-white/5 cursor-pointer" onClick={() => onOpenCatalog(item)} title="Katalogdaki konumunu aç">
-                      <img
+                      <RemoteImage
                         className="w-full h-full object-cover grayscale-[30%]"
                         alt={item.title}
                         src={item.poster}
@@ -297,7 +298,7 @@ export const DownloadsScreen: React.FC<DownloadsScreenProps> = ({
                 <div className="absolute inset-0 bg-gradient-to-r from-[#00f0ff]/5 via-transparent to-transparent pointer-events-none"></div>
                 <div className="flex gap-3 items-start relative z-10">
                   <div className="relative w-16 h-24 rounded-xl bg-[#2a2a2c] overflow-hidden shrink-0 shadow-md border border-white/5 cursor-pointer" onClick={() => onOpenCatalog(item)} title="Katalogdaki konumunu aç">
-                    <img
+                    <RemoteImage
                       className="w-full h-full object-cover"
                       alt={item.title}
                       src={item.poster}
@@ -564,7 +565,7 @@ export const DownloadsScreen: React.FC<DownloadsScreenProps> = ({
         {pendingScheduled.length===0?<p className="text-xs text-[#b9cacb]">Bekleyen indirme yok. Tamamlanan zamanlı indirmeler aşağıdaki film ve dizi listesine taşınır.</p>:
           <div className="max-h-72 overflow-y-auto space-y-2">
             {(showAllScheduled ? sortedScheduled : sortedScheduled.slice(0, 3)).map(job=><div key={job.id} className="flex gap-3 rounded-xl bg-[#282b31] p-2.5 items-center">
-              {job.poster&&<img src={job.poster} alt="" className="rounded-lg w-12 h-14 object-cover shrink-0"/>}
+              {job.poster&&<RemoteImage src={job.poster} alt="" className="rounded-lg w-12 h-14 object-cover shrink-0"/>}
               <div className="min-w-0 flex-1">
                 <p className="text-xs font-bold line-clamp-2">{job.title}</p>
                 <p className="text-[11px] text-[#b9cacb]">{job.mode==='night'?'🌙 '+[Math.floor(job.fromMinute/60),job.fromMinute%60].map(x=>String(x).padStart(2,'0')).join(':')+'–'+[Math.floor(job.toMinute/60),job.toMinute%60].map(x=>String(x).padStart(2,'0')).join(':'):new Date(job.startAt).toLocaleString('tr-TR')}</p>

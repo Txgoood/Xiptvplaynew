@@ -1,6 +1,7 @@
 import { MediaItem, XtreamUserInfo, XtreamServerInfo, SeriesDetail, SeriesEpisode, SeriesSeason } from '../types';
 import { isNative, httpGetJson, httpGetCatalogJson } from './net';
 import { catalogTimestamp, catalogRating, catalogReleaseDate } from './catalogDiscovery';
+import { pickImage } from './imageUrl';
 
 export interface XtreamVerificationResult {
   success: boolean;
@@ -293,7 +294,7 @@ export class XtreamClientService {
             category: categoryName,
             type: 'live',
             resolution: stream.name?.toUpperCase().includes('4K') ? '4K UHD' : stream.name?.toUpperCase().includes('FHD') ? 'FHD 60P' : 'HD',
-            poster: stream.stream_icon || 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=400&auto=format&fit=crop&q=80',
+            poster: pickImage(baseHost, stream.stream_icon, stream.cover, stream.tvg_logo) || '/brand/xiptvplay-icon.svg',
             streamUrl: this.getSafeStreamUrl(rawStreamUrl),
             rawStreamUrl,
             // Actual EPG is fetched on demand by EpgService; no placeholder programme names.
@@ -327,7 +328,7 @@ export class XtreamClientService {
             imdbId: /^tt\d+$/.test(String(vod.imdb_id || '')) ? String(vod.imdb_id) : undefined,
             releaseDate: catalogReleaseDate(vod.releaseDate || vod.release_date || vod.releasedate),
             genres: typeof vod.genre === 'string' ? vod.genre.split(/[,/]/).map((g: string) => g.trim()).filter(Boolean) : undefined,
-            poster: vod.stream_icon || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&auto=format&fit=crop&q=80',
+            poster: pickImage(baseHost, vod.stream_icon, vod.cover, vod.movie_image, vod.cover_big, vod.backdrop_path) || '/brand/xiptvplay-icon.svg',
             streamUrl: this.getSafeStreamUrl(rawStreamUrl),
             rawStreamUrl,
             fileSizeGb: vod.custom_sid ? parseFloat(vod.custom_sid) : 2.8,
@@ -361,7 +362,8 @@ export class XtreamClientService {
             releaseDate: catalogReleaseDate(series.releaseDate || series.release_date || series.releasedate),
             year: series.year ? parseInt(series.year, 10) : undefined,
             genres: typeof series.genre === 'string' ? series.genre.split(/[,/]/).map((g: string) => g.trim()).filter(Boolean) : undefined,
-            poster: series.cover || 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=400&auto=format&fit=crop&q=80',
+            poster: pickImage(baseHost, series.cover, series.cover_big, series.stream_icon, series.movie_image, series.backdrop_path) || '/brand/xiptvplay-icon.svg',
+            backdrop: pickImage(baseHost, series.backdrop_path, series.cover_big, series.cover),
             streamUrl: this.getSafeStreamUrl(rawStreamUrl),
             rawStreamUrl,
             audioTracks: ['Türkçe Dublaj', 'English'],
@@ -455,7 +457,7 @@ export class XtreamClientService {
             name: s.name || `Sezon ${s.season_number || 1}`,
             episodeCount: s.episode_count ? Number(s.episode_count) : undefined,
             airDate: s.air_date,
-            cover: s.cover,
+            cover: pickImage(baseHost, s.cover_big, s.cover),
           });
         });
       }
@@ -487,7 +489,7 @@ export class XtreamClientService {
                 plot: info.plot || info.description,
                 rating: info.rating ? String(info.rating) : undefined,
                 releaseDate: info.releasedate || info.release_date,
-                image: info.movie_image || ep.cover || rawInfo.cover,
+                image: pickImage(baseHost, info.movie_image, info.cover_big, info.image, info.thumbnail, info.cover, ep.movie_image, ep.cover, ep.image, rawInfo.cover_big, rawInfo.cover, rawInfo.backdrop_path),
                 streamUrl: safeUrl,
                 rawStreamUrl: directStreamUrl,
               };
@@ -515,14 +517,14 @@ export class XtreamClientService {
 
       const seriesDetail: SeriesDetail = {
         name: rawInfo.name || rawInfo.title,
-        cover: rawInfo.cover,
+        cover: pickImage(baseHost, rawInfo.cover, rawInfo.cover_big, rawInfo.movie_image, rawInfo.backdrop_path),
         plot: rawInfo.plot || rawInfo.description || rawInfo.plot_tr,
         cast: rawInfo.cast,
         director: rawInfo.director,
         genre: rawInfo.genre,
         releaseDate: rawInfo.releaseDate || rawInfo.releasedate,
         rating: rawInfo.rating ? String(rawInfo.rating) : undefined,
-        backdrop: Array.isArray(rawInfo.backdrop_path) && rawInfo.backdrop_path.length > 0 ? rawInfo.backdrop_path[0] : undefined,
+        backdrop: pickImage(baseHost, rawInfo.backdrop_path, rawInfo.cover_big, rawInfo.cover),
         seasons: seasonsList,
         episodes: episodesMap,
       };

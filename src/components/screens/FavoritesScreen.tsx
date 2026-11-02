@@ -3,6 +3,7 @@ import {readCatalogPreferences,saveCatalogPreferences,VIEW_OPTIONS,type CatalogV
 import { MovieCollectionBadge } from '../MovieCollectionBadge';
 import { MediaItem } from '../../types';
 import { Heart, Play } from 'lucide-react';
+import { RemoteImage } from '../RemoteImage';
 
 interface FavoritesScreenProps {
   favorites: MediaItem[];
@@ -59,14 +60,11 @@ export const FavoritesScreen: React.FC<FavoritesScreenProps> = ({
               className={`catalog-card catalog-card--${view} relative rounded-2xl bg-[#1c1b1d] border border-white/5 p-2 gap-2`}
             >
               <div className="catalog-card-poster relative rounded-xl bg-[#2a2a2c] overflow-hidden">
-                <img
+                <RemoteImage
                   className={`w-full h-full ${item.type==='live'?'object-contain p-3':'object-cover'}`}
                   loading="lazy" decoding="async"
                   alt={item.title}
                   src={item.poster}
-                  onError={(e) => {
-                    e.currentTarget.onerror=null;e.currentTarget.src='/brand/xiptvplay-icon.svg';
-                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e10] via-transparent to-transparent"></div>
                 {item.type === 'movie' && <MovieCollectionBadge media={item}/>}

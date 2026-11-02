@@ -4,6 +4,7 @@ import type {MediaItem} from '../../types';
 import type {WatchHistoryEntry} from '../../services/watchHistory';
 import {discoveryTags,durationMinutes,eligibleDecisions,pickDecisions,type DecisionFilters} from '../../services/discoveryTools';
 import {peekTmdbDetails} from '../../services/tmdbClient';
+import { RemoteImage } from '../RemoteImage';
 export function DecisionModal({catalog,history,onClose,onInfo,onPlay}:{catalog:MediaItem[];history:WatchHistoryEntry[];onClose:()=>void;onInfo:(item:MediaItem)=>void;onPlay:(item:MediaItem)=>void}) {
   const [filters,setFilters]=useState<DecisionFilters>({type:'movie',tag:'',maxMinutes:0,minRating:0,hideWatched:true});
   const [round,setRound]=useState(0), seen=React.useRef(new Set<string>());
@@ -25,7 +26,7 @@ export function DecisionModal({catalog,history,onClose,onInfo,onPlay}:{catalog:M
       <p className="text-[11px] text-[#849495]">Süre / puan filtresinde bilgisi eksik içerikler elenir. Dizi süresi biliniyorsa bölüm süresidir.</p>
       {!picks.length&&<p role="status" className="p-4 rounded-xl bg-white/5">Bu filtrelere uygun içerik yok. Süre veya puan sınırını kaldırabilirsin.</p>}
       {picks.map(item=>{const cached=peekTmdbDetails(item),minutes=cached?.runtimeMinutes||durationMinutes(item.duration);return <article key={item.id} className="flex gap-3 p-3 rounded-2xl bg-[#242427] border border-white/5">
-        <button onClick={()=>onInfo(item)} aria-label={item.title+' bilgileri'} className="w-20 shrink-0"><img src={item.poster} alt="" className="w-full aspect-[2/3] object-cover rounded-xl" loading="lazy"/></button>
+        <button onClick={()=>onInfo(item)} aria-label={item.title+' bilgileri'} className="w-20 shrink-0"><RemoteImage src={item.poster} alt="" className="w-full aspect-[2/3] object-cover rounded-xl" loading="lazy"/></button>
         <div className="min-w-0 flex-1 space-y-2"><button className="text-left font-bold text-sm" onClick={()=>onInfo(item)}>{item.title}</button><p className="text-xs text-[#b9cacb]">{minutes?Math.round(minutes)+' dk':'Süre bilinmiyor'} · {cached?`${cached.rating.toFixed(1)} TMDB`:item.rating?`${item.rating} sağlayıcı puanı`:'Puan bilinmiyor'}</p><p className="text-xs text-[#b9cacb]">{filters.tag?'Seçtiğin tür / kategoriye uygun.':'Kataloğundaki uygun seçeneklerden seçildi.'}</p><button onClick={()=>onPlay(item)} className="min-h-11 px-4 bg-[#00f0ff] text-[#00363a] rounded-full flex items-center gap-2 font-bold text-sm"><Play size={16}/>{item.type==='series'?'Bölümleri aç':'İzle'}</button></div>
       </article>})}
       {picks.length>0&&<button onClick={()=>setRound(n=>n+1)} className="min-h-11 w-full rounded-full border border-[#00f0ff]/40 text-[#00f0ff]">Başka 3 öner</button>}

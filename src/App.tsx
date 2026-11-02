@@ -33,6 +33,7 @@ import { Info, Search as SearchIcon, PlayCircle, X as CloseIcon } from 'lucide-r
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Capacitor, registerPlugin } from '@capacitor/core';
 import { DownloadNotifications } from './services/downloadNotifications';
+import { RemoteImage } from './components/RemoteImage';
 
 export default function App() {
   useEffect(()=>{
@@ -1432,14 +1433,10 @@ export default function App() {
                       className="flex items-center justify-between p-2 rounded-xl hover:bg-[#201f21] text-left transition-colors cursor-pointer"
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <img
+                        <RemoteImage
                           src={item.poster}
                           alt=""
                           className="w-9 h-9 rounded-lg object-cover shrink-0"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src =
-                              'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=400&auto=format&fit=crop&q=80';
-                          }}
                         />
                         <div className="flex flex-col min-w-0">
                           <span className="font-headline text-xs font-semibold text-white truncate">

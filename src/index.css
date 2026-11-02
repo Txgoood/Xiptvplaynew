@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+@theme {
+  --font-headline: 'Plus Jakarta Sans', 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-body: 'Manrope', system-ui, -apple-system, sans-serif;
+
+  --color-surface: #131315;
+  --color-surface-dim: #131315;
+  --color-surface-bright: #39393b;
+  --color-surface-container-lowest: #0e0e10;
+  --color-surface-container-low: #1c1b1d;
+  --color-surface-container: #201f21;
+  --color-surface-container-high: #2a2a2c;
+  --color-surface-container-highest: #353437;
+
+  --color-on-surface: #e5e1e4;
+  --color-on-surface-variant: #b9cacb;
+
+  --color-primary: #dbfcff;
+  --color-on-primary: #00363a;
+  --color-primary-container: #00f0ff;
+  --color-on-primary-container: #006970;
+  --color-primary-fixed: #7df4ff;
+  --color-primary-fixed-dim: #00dbe9;
+
+  --color-secondary: #adc6ff;
+  --color-secondary-container: #0566d9;
+  --color-on-secondary: #002e6a;
+  --color-on-secondary-container: #e6ecff;
+  --color-secondary-fixed: #d8e2ff;
+
+  --color-tertiary: #d8ffe7;
+  --color-tertiary-container: #65f2b5;
+  --color-tertiary-fixed: #6ffbbe;
+  --color-tertiary-fixed-dim: #4edea3;
+
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+}
+
+@layer base {
+  *, ::before, ::after {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+    font-family: var(--font-body);
+    background-color: #131315;
+    color: #e5e1e4;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-headline {
+    font-family: var(--font-headline);
+    letter-spacing: normal;
+    line-height: 1.35;
+  }
+
+  button, input, select, textarea {
+    font-family: inherit;
+    letter-spacing: normal;
+  }
+}
+
+/* Safe area padding utilities */
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Custom scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom range input */
+input[type="range"] {
+  accent-color: #00f0ff;
+}
+
+
+/* Katalog ekranı genişliği kullanır; kart yoğunluğu kullanıcı tercihidir. */
+.catalog-grid { display: grid; gap: 14px; align-items: stretch; min-width: 0; }
+.catalog-grid--large { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.catalog-grid--medium { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.catalog-grid--small { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.catalog-grid--list, .catalog-grid--details { grid-template-columns: minmax(0, 1fr); }
+.catalog-card { display: flex; flex-direction: column; }
+.catalog-card-poster { aspect-ratio: 2 / 3; }
+.catalog-card--large .catalog-card-poster { aspect-ratio: 16 / 9; }
+.catalog-card-body { flex: 1; }
+.catalog-card--list, .catalog-card--details { flex-direction: row; }
+.catalog-card--list .catalog-card-poster { width: 72px; flex: 0 0 72px; aspect-ratio: 2 / 3; }
+.catalog-card--details .catalog-card-poster { width: 128px; flex: 0 0 128px; aspect-ratio: 2 / 3; }
+.catalog-card--list .catalog-card-actions, .catalog-card--details .catalog-card-actions { justify-content: flex-start; }
+.catalog-card--list .catalog-primary, .catalog-card--details .catalog-primary { flex: 0 1 140px; }
+@media (max-width: 599px) {
+  .catalog-grid { gap: 8px; }
+  .catalog-grid--medium { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .catalog-card--small .catalog-card-body { padding: 5px; gap: 5px; }
+  .catalog-card--small h3 { font-size: 11px; }
+  .catalog-card--small .catalog-card-category { display: none; }
+  .catalog-card--small .catalog-card-actions { gap: 4px; }
+  .catalog-card--small .catalog-primary { flex-basis: 100%; }
+  .catalog-card--small .catalog-primary span { display: none; }
+  .catalog-card--small .catalog-card-actions button { min-width: 30px; flex-grow: 1; }
+  .catalog-card--small .catalog-schedule { flex-basis: 100%; }
+  .catalog-card--details .catalog-card-poster { width: 100px; flex-basis: 100px; }
+}
+/* Dar kartta oynat düğmesi diğer işlemler tarafından sıkıştırılmaz. */
+.catalog-card--large .catalog-primary,
+.catalog-card--medium .catalog-primary,
+.catalog-card--small .catalog-primary { flex-basis: 100%; }
+
+/* Uzun listelerde sabit kart ölçüsü sanallaştırmanın kaydırmasını kararlı tutar. */
+.virtual-catalog-cell { min-width: 0; }
+.virtual-catalog-cell > .catalog-card { height: 100%; }
+.virtual-catalog-cell .catalog-card-body { height: 172px; flex: none; }
+.virtual-catalog-cell .catalog-card--small .catalog-card-body { height: 172px; }
+.virtual-catalog-cell .catalog-card--list { height: 126px; }
+.virtual-catalog-cell .catalog-card--details { height: 220px; }
+.virtual-catalog-cell .catalog-card--list .catalog-card-body,
+.virtual-catalog-cell .catalog-card--details .catalog-card-body { height: auto; flex: 1; }
+.discovery-select { display: block; width: 100%; min-height: 44px; margin-top: 5px; padding: 8px; border-radius: 12px; background: #28282b; color: white; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+@media (max-width: 479px) { .catalog-type-tabs { gap: 2px; } .catalog-type-tabs button { font-size: 10px; padding-inline: 2px; min-height: 40px; } }

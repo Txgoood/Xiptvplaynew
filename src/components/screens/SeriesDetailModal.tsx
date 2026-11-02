@@ -1,4 +1,5 @@
 import { RemoteImage } from '../RemoteImage';
+import { tmdbImageFor } from '../../services/tmdbImage';
 import React, { useState, useEffect } from 'react';
 import { MediaItem, Playlist, SeriesDetail, SeriesEpisode } from '../../types';
 import { FollowButton } from './FollowingShelf';
@@ -114,6 +115,7 @@ export const SeriesDetailModal: React.FC<SeriesDetailModalProps> = ({
           <RemoteImage
             src={seriesDetail?.backdrop || seriesDetail?.cover || seriesItem.backdrop || seriesItem.poster}
             fallbacks={[seriesDetail?.cover, seriesItem.poster]}
+            lateFallback={() => tmdbImageFor(seriesItem, 'backdrop')}
             alt={seriesItem.title}
             className="w-full h-full object-cover opacity-35 blur-xs scale-105"
           />
@@ -135,6 +137,7 @@ export const SeriesDetailModal: React.FC<SeriesDetailModalProps> = ({
               <RemoteImage
                 src={seriesDetail?.cover || seriesItem.poster}
                 fallbacks={[seriesItem.poster, seriesDetail?.backdrop]}
+                lateFallback={() => tmdbImageFor(seriesItem, 'poster')}
                 alt={seriesItem.title}
                 className="w-full h-full object-cover"
               />
@@ -296,6 +299,7 @@ export const SeriesDetailModal: React.FC<SeriesDetailModalProps> = ({
                             <RemoteImage
                               src={episode.image || seriesDetail?.cover || seriesItem.poster}
                               fallbacks={[seriesDetail?.cover, seriesItem.poster, seriesDetail?.backdrop]}
+                              lateFallback={() => tmdbImageFor(seriesItem, 'backdrop')}
                               alt={episode.title}
                               className="w-full h-full object-cover"
                             />

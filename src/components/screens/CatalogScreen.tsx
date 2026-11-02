@@ -1,4 +1,5 @@
 import { RemoteImage } from '../RemoteImage';
+import { tmdbImageFor } from '../../services/tmdbImage';
 import React, { useState, useMemo, useEffect, useDeferredValue } from 'react';
 import { MediaItem, Playlist } from '../../types';
 import { StorageService } from '../../services/storage';
@@ -335,7 +336,7 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({
             {shelf.items.map(item => <button type="button" key={item.id} onClick={() => item.type === 'series' ? onOpenSeriesDetail(item) : onOpenTmdbInfo(item)}
               className="relative shrink-0 w-[32vw] sm:w-36 lg:w-44 snap-start text-left group" aria-label={`${item.title} keşfet`}>
               <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-[#29292c]">
-                <RemoteImage src={item.poster || '/brand/xiptvplay-icon.svg'} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-105 transition-transform"/>
+                <RemoteImage src={item.poster} lateFallback={item.type==='live'?undefined:()=>tmdbImageFor(item)} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-105 transition-transform"/>
                 {item.type === 'movie' && <MovieCollectionBadge media={item}/>}
                 {shelf.badge && <span className="absolute bottom-0 inset-x-0 px-2 py-1 bg-[#00f0ff] text-[#00363a] font-bold text-[10px] text-center">{shelf.badge}</span>}
               </div>
